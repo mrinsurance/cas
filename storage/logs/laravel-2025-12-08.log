@@ -1,0 +1,32 @@
+[2025-12-08 09:56:09] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 09:58:54] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 12:55:43] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 13:08:22] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 14:34:54] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 14:35:18] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 14:35:18] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 
+[2025-12-08 15:48:26] local.ERROR: Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) {"userId":1,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) at /home/l0t4shykdrn8/public_html/casbara.himachalsociety.com/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:262)
+[stacktrace]
+#0 {main}
+"} 

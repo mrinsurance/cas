@@ -1,0 +1,1 @@
+<center><h1>404 Page not found!</h1></center><?php /**PATH /home/u574406823/domains/himachalsociety.com/public_html/casbatran/resources/views/errors/404.blade.php ENDPATH**/ ?>

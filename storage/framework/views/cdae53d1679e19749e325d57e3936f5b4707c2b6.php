@@ -1,0 +1,1 @@
+<center><h1>404 Page not found!</h1></center><?php /**PATH C:\xampp\htdocs\himachal-banking\resources\views/errors/404.blade.php ENDPATH**/ ?>
