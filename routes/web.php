@@ -33,7 +33,7 @@ Route::group(['middleware' => ['auth'],'namespace'=>'Controllers'], function() {
 
 
 });
-Route::get('database-backup','databaseBackupController@index');
+//Route::get('database-backup','databaseBackupController@index');
 Route::get('/', 'HomeController@index')->name('/');
 Route::get('/home', 'HomeController@index')->name('/home');
 Route::get('get-district', [HomeController::class, 'GetDistrictById'])->name('get.district.by.state');
