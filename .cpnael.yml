@@ -1,8 +1,0 @@
-deployment:
-  tasks:
-    - export PROJECTPATH=/home/CPANEL_USER/repositories/cas
-    - export DEPLOYPATH=/home/CPANEL_USER/public_html/casadars.himachalsociety.com/
-    - /bin/cp -R $PROJECTPATH/public/* $DEPLOYPATH
-    - /usr/local/bin/php $PROJECTPATH/artisan config:clear
-    - /usr/local/bin/php $PROJECTPATH/artisan cache:clear
-    - /usr/local/bin/php $PROJECTPATH/artisan view:clear

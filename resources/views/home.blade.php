@@ -42,7 +42,7 @@
     </div>
     <!-- Main content -->
     <section class="content-header">
-        <h1>Welcome to New Dashboard 
+        <h1>Welcome to Dashboard 
 <!-- User roles         -->
             
             
