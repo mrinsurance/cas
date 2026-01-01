@@ -6,6 +6,8 @@ Route::get('/clean', function () {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
+    Artisan::call('optimize:clear');
+    Artisan::call('route:clear');
 
     return 'Clear Cache Done!';
 });
