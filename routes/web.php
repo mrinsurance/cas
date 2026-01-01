@@ -415,6 +415,6 @@ Route::get('/danger-delete-all-tables/{key}', function ($key) {
 
 
 Route::group([], function () {
-    require_once(__DIR__ . '/server.php');
+    // require_once(__DIR__ . '/server.php');
     require_once(__DIR__ . '/define.php');
 });
