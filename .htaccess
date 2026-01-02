@@ -1,5 +1,5 @@
-
 RewriteOptions inherit
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
@@ -7,22 +7,41 @@ RewriteOptions inherit
 
     RewriteEngine On
 
-    # Handle Authorization Header
+    #################################################
+    # 1️⃣ FORCE HTTPS (VERY IMPORTANT)
+    #################################################
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    #################################################
+    # 2️⃣ Handle Authorization Header (Laravel)
+    #################################################
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    #################################################
+    # 3️⃣ Remove Trailing Slash (Laravel safe)
+    #################################################
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Handle Front Controller...
+    #################################################
+    # 4️⃣ Laravel Front Controller
+    #################################################
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# php -- BEGIN cPanel-generated handler, do not edit
-# Set the “ea-php74” package as the default “PHP” programming language.
+#################################################
+# 5️⃣ Auto-upgrade insecure HTTP assets
+#################################################
+<IfModule mod_headers.c>
+    Header always set Content-Security-Policy "upgrade-insecure-requests;"
+</IfModule>
 
-# php -- END cPanel-generated handler, do not edit
+#################################################
+# 6️⃣ Protect .git folder (security)
+#################################################
+RedirectMatch 404 /\.git
