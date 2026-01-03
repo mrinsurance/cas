@@ -451,7 +451,7 @@ Route::get('/db-export/runner', function () {
 <pre id="log">Starting export…</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsociety.com/db-export/run?secret={$secret}";
+const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={$secret}";
 const logEl = document.getElementById('log');
 
 async function runNext() {
