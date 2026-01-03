@@ -14,6 +14,13 @@ class DbImportController extends Controller
             abort(403);
         }
 
+        file_put_contents(
+    storage_path('step1.txt'),
+    "Reached run()\n",
+    FILE_APPEND
+);
+
+
         // prevent timeout / memory crash
         ini_set('memory_limit', '512M');
         set_time_limit(0);
