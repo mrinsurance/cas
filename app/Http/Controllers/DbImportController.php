@@ -15,8 +15,7 @@ class DbImportController extends Controller
             abort(403);
         }
 
-        dd($request->query('secret'));
-
+        
         $databases = config('db_importer.databases');
         $basePath  = config('db_importer.path');
 
