@@ -9,15 +9,15 @@ class DbExportController extends Controller
 {
     public function run(Request $request)
     {
-        if ($request->query('secret') !== config('db_importer.secret')) {
+        if ($request->query('secret') !== config('db_exporter.secret')) {
             abort(403);
         }
 
         ini_set('memory_limit', '512M');
         set_time_limit(0);
 
-        $databases  = config('db_importer.databases');
-        $exportPath = config('db_importer.path');
+        $databases  = config('db_exporter.databases');
+        $exportPath = config('db_exporter.path');
 
         if (!is_dir($exportPath)) {
             mkdir($exportPath, 0755, true);

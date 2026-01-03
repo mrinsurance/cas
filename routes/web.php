@@ -486,6 +486,46 @@ HTML;
 });
 
 
+Route::get('/db-import/runner', function () {
+    $secret = request('secret');
+
+    return <<<HTML
+<!doctype html>
+<html>
+<body>
+<h3>DB Import Running…</h3>
+<pre id="log">Starting…</pre>
+
+<script>
+const RUN_URL = "https://casadarsh.himachalsoceity.com/db-import/run?secret={$secret}";
+const log = document.getElementById('log');
+
+async function run() {
+  try {
+    const res = await fetch(RUN_URL + '&_=' + Date.now(), { cache: 'no-store' });
+    const data = await res.json();
+    log.textContent += "\\n" + JSON.stringify(data, null, 2);
+
+    if (data.status !== 'completed') {
+      setTimeout(run, 1000);
+    } else {
+      log.textContent += "\\n✅ ALL DATABASES IMPORTED";
+    }
+  } catch (e) {
+    log.textContent += "\\n❌ ERROR: " + e;
+    setTimeout(run, 3000);
+  }
+}
+
+run();
+</script>
+</body>
+</html>
+HTML;
+});
+
+
+
 Route::group([], function () {
     require_once(__DIR__ . '/server.php');
     require_once(__DIR__ . '/define.php');
