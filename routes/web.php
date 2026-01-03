@@ -5,6 +5,7 @@ use App\Http\Controllers\Audit\reportController;
 use App\Http\Controllers\Calculation\interestOnFd;
 use App\Http\Controllers\Daily_Report\dcrController;
 use App\Http\Controllers\DbCleanerController;
+use App\Http\Controllers\DbExportController;
 use App\Http\Controllers\DbImportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Master\salePartyController;
@@ -415,8 +416,15 @@ Route::get('/danger-delete-all-tables/{key}', function ($key) {
     return '✅ All tables deleted successfully.';
 });
 
-Route::get('/db-import/run', [DbImportController::class, 'run']);
+Route::get('/db-export/run', [DbExportController::class, 'run']);
 Route::get('/db-cleaner/run', [DbCleanerController::class, 'run']);
+Route::get('/test-gzip', function () {
+    return [
+        'gzopen' => function_exists('gzopen'),
+        'zlib'   => extension_loaded('zlib'),
+    ];
+});
+
 
 
 
