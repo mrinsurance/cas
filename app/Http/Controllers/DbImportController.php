@@ -1,27 +1,31 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 class DbImportController extends Controller
 {
     public function run(Request $request)
     {
-        
         // 🔐 Secret check
         if ($request->query('secret') !== config('db_importer.secret')) {
             abort(403);
         }
 
-        
+        // prevent timeout / memory crash
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+
         $databases = config('db_importer.databases');
         $basePath  = config('db_importer.path');
 
-        // progress tracking (important)
-        $currentIndex = Cache::get('db_import_index', 0);
-
+        // ✅ FILE-BASED PROGRESS (instead of Cache)
+        $progressFile = storage_path('db-import-progress.txt');
+        $currentIndex = file_exists($progressFile)
+            ? (int) file_get_contents($progressFile)
+            : 0;
 
         if (!isset($databases[$currentIndex])) {
             return response()->json([
@@ -37,32 +41,41 @@ class DbImportController extends Controller
             abort(500, "SQL file missing for {$db}");
         }
 
+        // 🔍 DB permission test
         DB::statement("USE `$db`");
         DB::statement("SET FOREIGN_KEY_CHECKS=0");
 
-        // ⚡ FAST STREAM IMPORT
-        $sql = '';
-        foreach (file($file) as $line) {
-            if (str_starts_with(trim($line), '--') || trim($line) === '') {
+        // ✅ STREAM SQL FILE (NO MEMORY ISSUE)
+        $handle = fopen($file, 'r');
+        $query = '';
+
+        while (($line = fgets($handle)) !== false) {
+            $line = trim($line);
+
+            // skip comments / empty lines
+            if ($line === '' || str_starts_with($line, '--')) {
                 continue;
             }
 
-            $sql .= $line;
+            $query .= $line . "\n";
 
-            if (str_ends_with(trim($line), ';')) {
-                DB::unprepared($sql);
-                $sql = '';
+            if (substr($line, -1) === ';') {
+                DB::unprepared($query);
+                $query = '';
             }
         }
 
+        fclose($handle);
+
         DB::statement("SET FOREIGN_KEY_CHECKS=1");
 
-        Cache::put('db_import_index', $currentIndex + 1);
+        // update progress
+        file_put_contents($progressFile, $currentIndex + 1);
 
         return response()->json([
             'status' => 'imported',
             'database' => $db,
-            'next' => url('/db-import/run?secret='.$request->query('secret')),
+            'next' => url('/db-import/run?secret=' . $request->query('secret')),
         ]);
     }
 }
