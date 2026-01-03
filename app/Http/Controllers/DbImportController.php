@@ -22,11 +22,6 @@ class DbImportController extends Controller
         // progress tracking (important)
         $currentIndex = Cache::get('db_import_index', 0);
 
-        dd([
-           'db'  => $databases,
-           'path'  => $basePath,
-           'index'  => $currentIndex,
-        ]);
 
         if (!isset($databases[$currentIndex])) {
             return response()->json([
