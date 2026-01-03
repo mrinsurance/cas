@@ -47,13 +47,7 @@ class DbImportController extends Controller
 
        $file = "{$basePath}/{$db}.sql";
 
-              try {
-    DB::statement("USE `$db`");
-    file_put_contents(storage_path('step3.txt'), "DB USE OK: $db\n", FILE_APPEND);
-} catch (\Throwable $e) {
-    file_put_contents(storage_path('db_error.txt'), $e->getMessage());
-    exit('DB PERMISSION ERROR');
-}
+            dd($file);
 
         if (!file_exists($file)) {
             abort(500, "SQL file missing for {$db}");
