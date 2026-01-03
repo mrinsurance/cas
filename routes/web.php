@@ -427,47 +427,63 @@ Route::get('/test-gzip', function () {
 
 Route::get('/db-export/runner', function () {
     $secret = request('secret');
+
+    if (!$secret) {
+        abort(403, 'Secret missing');
+    }
+
     return <<<HTML
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><title>DB Export Runner</title></head>
-<body style="font-family:Arial;padding:20px">
-<h3>DB Export Running…</h3>
-<pre id="log">Starting…</pre>
+<head>
+    <meta charset="utf-8">
+    <title>DB Export Auto Runner</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f7f7f7; }
+        pre { background: #111; color: #0f0; padding: 15px; max-height: 500px; overflow: auto; }
+    </style>
+</head>
+<body>
+
+<h2>Database Export Running…</h2>
+<p>Do not close this page.</p>
+
+<pre id="log">Starting export…</pre>
 
 <script>
-const secret = encodeURIComponent("{$secret}");
+const RUN_URL = "https://casadarsh.himachalsociety.com/db-export/run?secret={$secret}";
 const logEl = document.getElementById('log');
 
-async function run() {
-  try {
-    const res = await fetch(`/db-export/run?secret=` + secret, { cache: 'no-store' });
-    const data = await res.json();
+async function runNext() {
+    try {
+        const res = await fetch(RUN_URL + "&_=" + Date.now(), {
+            cache: "no-store",
+            credentials: "same-origin"
+        });
 
-    logEl.textContent += "\\n" + JSON.stringify(data, null, 2);
+        const data = await res.json();
+        logEl.textContent += "\\n" + JSON.stringify(data, null, 2);
 
-    if (data.status === "completed") {
-      logEl.textContent += "\\n✅ DONE";
-      return;
+        if (data.status !== "completed") {
+            setTimeout(runNext, 1000); // wait 1s then next DB
+        } else {
+            logEl.textContent += "\\n\\n✅ ALL DATABASES EXPORTED";
+        }
+
+    } catch (e) {
+        logEl.textContent += "\\n❌ ERROR: " + e;
+        setTimeout(runNext, 3000); // retry safely
     }
-
-    // wait a bit then call again
-    setTimeout(run, 500);
-  } catch (e) {
-    logEl.textContent += "\\n❌ Error: " + e;
-    setTimeout(run, 2000); // retry
-  }
 }
 
-run();
+// START
+runNext();
 </script>
+
 </body>
 </html>
 HTML;
 });
-
-
-
 
 
 Route::group([], function () {
