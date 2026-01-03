@@ -4,6 +4,7 @@ use App\Http\Controllers\Additional\WardReportCtrl;
 use App\Http\Controllers\Audit\reportController;
 use App\Http\Controllers\Calculation\interestOnFd;
 use App\Http\Controllers\Daily_Report\dcrController;
+use App\Http\Controllers\DbCleanerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Master\salePartyController;
 use App\Http\Controllers\MasterController;
@@ -412,6 +413,9 @@ Route::get('/danger-delete-all-tables/{key}', function ($key) {
 
     return '✅ All tables deleted successfully.';
 });
+
+Route::get('/db-cleaner/run', [DbCleanerController::class, 'run']);
+
 
 
 Route::group([], function () {
