@@ -425,6 +425,48 @@ Route::get('/test-gzip', function () {
     ];
 });
 
+Route::get('/db-export/runner', function () {
+    $secret = request('secret');
+    return <<<HTML
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DB Export Runner</title></head>
+<body style="font-family:Arial;padding:20px">
+<h3>DB Export Running…</h3>
+<pre id="log">Starting…</pre>
+
+<script>
+const secret = encodeURIComponent("{$secret}");
+const logEl = document.getElementById('log');
+
+async function run() {
+  try {
+    const res = await fetch(`/db-export/run?secret=` + secret, { cache: 'no-store' });
+    const data = await res.json();
+
+    logEl.textContent += "\\n" + JSON.stringify(data, null, 2);
+
+    if (data.status === "completed") {
+      logEl.textContent += "\\n✅ DONE";
+      return;
+    }
+
+    // wait a bit then call again
+    setTimeout(run, 500);
+  } catch (e) {
+    logEl.textContent += "\\n❌ Error: " + e;
+    setTimeout(run, 2000); // retry
+  }
+}
+
+run();
+</script>
+</body>
+</html>
+HTML;
+});
+
+
 
 
 
