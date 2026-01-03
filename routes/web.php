@@ -489,36 +489,65 @@ HTML;
 Route::get('/db-import/runner', function () {
     $secret = request('secret');
 
+    if (!$secret) {
+        abort(403);
+    }
+
     return <<<HTML
 <!doctype html>
 <html>
+<head>
+<meta charset="utf-8">
+<title>DB Import Runner</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+pre { background: #111; color: #0f0; padding: 15px; max-height: 500px; overflow:auto; }
+</style>
+</head>
 <body>
-<h3>DB Import Running…</h3>
-<pre id="log">Starting…</pre>
+
+<h3>Database Import Running…</h3>
+<p>Do not close this page.</p>
+
+<pre id="log">Starting import…</pre>
 
 <script>
 const RUN_URL = "https://casadarsh.himachalsoceity.com/db-import/run?secret={$secret}";
 const log = document.getElementById('log');
 
-async function run() {
-  try {
-    const res = await fetch(RUN_URL + '&_=' + Date.now(), { cache: 'no-store' });
-    const data = await res.json();
-    log.textContent += "\\n" + JSON.stringify(data, null, 2);
+async function runNext() {
+    try {
+        const res = await fetch(RUN_URL + '&_=' + Date.now(), {
+            cache: 'no-store'
+        });
 
-    if (data.status !== 'completed') {
-      setTimeout(run, 1000);
-    } else {
-      log.textContent += "\\n✅ ALL DATABASES IMPORTED";
+        const text = await res.text();
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            log.textContent += "\\n❌ Non-JSON response:\\n" + text.substring(0, 300);
+            return;
+        }
+
+        log.textContent += "\\n" + JSON.stringify(data, null, 2);
+
+        if (data.status !== 'completed') {
+            setTimeout(runNext, 1000);
+        } else {
+            log.textContent += "\\n\\n✅ ALL DATABASES IMPORTED";
+        }
+
+    } catch (e) {
+        log.textContent += "\\n❌ ERROR: " + e;
+        setTimeout(runNext, 3000);
     }
-  } catch (e) {
-    log.textContent += "\\n❌ ERROR: " + e;
-    setTimeout(run, 3000);
-  }
 }
 
-run();
+runNext();
 </script>
+
 </body>
 </html>
 HTML;
