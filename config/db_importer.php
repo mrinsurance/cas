@@ -1,6 +1,6 @@
 <?php
 return [
-    'secret' => env('DB_IMPORT_SECRET'),
+    'secret' => env('DB_CLEANER_SECRET'),
 
     'path' => storage_path('db-imports'),
 
