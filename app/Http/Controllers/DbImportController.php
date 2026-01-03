@@ -9,6 +9,7 @@ class DbImportController extends Controller
 {
     public function run(Request $request)
     {
+        dd('hello');
         // 🔐 Secret check
         if ($request->query('secret') !== config('db_importer.secret')) {
             abort(403);
