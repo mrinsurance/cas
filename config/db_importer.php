@@ -5,8 +5,8 @@ return [
     'path' => storage_path('db-imports'),
 
     'databases' => [
-        'casbalduhak',
-        'casbara',
+        'casadarsh',
+        'casamned',
         // all 60 DBs
     ],
 ];
