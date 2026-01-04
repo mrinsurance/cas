@@ -77,7 +77,7 @@ class DbCleanerController extends Controller
             'kmcslghm',
             'ksmcsl',
             'lahar',
-            'ngindianidhi',
+            'ncgindianidhi',
             'ntccslnadaun',
         ];
 
