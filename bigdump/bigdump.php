@@ -1167,10 +1167,10 @@ function create_ajax_script()
 
 }
 
-if ($auto_proceed) {
-    header("Location: controller.php?secret=hp20nbd");
-    exit;
-}
+// if ($auto_proceed) {
+//     header("Location: controller.php?secret=hp20nbd");
+//     exit;
+// }
 
 
 ?>
