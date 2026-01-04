@@ -429,43 +429,68 @@ Route::get('/db-export/runner', function () {
 <meta charset="utf-8">
 <title>DB Export Runner</title>
 <style>
-body { font-family: Arial; padding:20px; }
-pre { background:#111; color:#0f0; padding:15px; }
+body { font-family: Arial; padding:20px; background:#f5f5f5; }
+pre  { background:#111; color:#0f0; padding:15px; max-height:500px; overflow:auto; }
 </style>
 </head>
 <body>
 
 <h2>Database Export Running…</h2>
-<p>One database per step. Please wait.</p>
+<p>One database per request. Page will auto-retry if server is busy.</p>
 
-<pre id="log">Starting export...</pre>
+<pre id="log">Starting export…</pre>
 
 <script>
 const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={$secret}";
 const log = document.getElementById('log');
 
+let delay = 2000; // start with 2s
+
 async function runNext() {
-    const res = await fetch(RUN_URL + '&_=' + Date.now(), { cache:'no-store' });
-    const text = await res.text();
+    try {
+        const res = await fetch(RUN_URL + '&_=' + Date.now(), {
+            cache: 'no-store'
+        });
 
-    let data;
-    try { data = JSON.parse(text); }
-    catch {
-        log.textContent += "\\n❌ Non-JSON response:\\n" + text.slice(0,300);
-        return;
-    }
+        const text = await res.text();
 
-    log.textContent += "\\n" + JSON.stringify(data, null, 2);
+        // ⚠️ Server error / HTML (503, 504, etc.)
+        if (!res.ok || text.startsWith('<!DOCTYPE')) {
+            log.textContent += "\\n⚠️ Server busy (" + res.status + "). Retrying in " + (delay/1000) + "s…";
+            setTimeout(runNext, delay);
+            return;
+        }
 
-    if (data.status !== 'completed') {
-        setTimeout(runNext, 1000);
-    } else {
-        log.textContent += "\\n\\n✅ ALL DATABASES EXPORTED";
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch {
+            log.textContent += "\\n⚠️ Non-JSON response. Retrying…";
+            setTimeout(runNext, delay);
+            return;
+        }
+
+        // ✅ Success → reset delay
+        delay = 2000;
+
+        log.textContent += "\\n" + JSON.stringify(data, null, 2);
+
+        if (data.status !== 'completed') {
+            setTimeout(runNext, delay);
+        } else {
+            log.textContent += "\\n\\n✅ ALL DATABASES EXPORTED";
+        }
+
+    } catch (e) {
+        log.textContent += "\\n⚠️ Network error. Retrying in " + (delay/1000) + "s…";
+        setTimeout(runNext, delay);
     }
 }
 
+// 🚀 START
 runNext();
 </script>
+
 </body>
 </html>
 HTML;
