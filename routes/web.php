@@ -441,58 +441,31 @@ pre { background:#111; color:#0f0; padding:15px; }
 <pre id="log">Starting export...</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsoceity.com/db-import/run?secret={$secret}";
+const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={$secret}";
 const log = document.getElementById('log');
 
-let delay = 2000; // start with 2 seconds
-
 async function runNext() {
-    try {
-        const res = await fetch(RUN_URL + '&_=' + Date.now(), {
-            cache: 'no-store'
-        });
+    const res = await fetch(RUN_URL + '&_=' + Date.now(), { cache:'no-store' });
+    const text = await res.text();
 
-        const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch {
+        log.textContent += "\\n❌ Non-JSON response:\\n" + text.slice(0,300);
+        return;
+    }
 
-        // 503 / HTML response
-        if (res.status === 503 || text.startsWith('<!DOCTYPE')) {
-            log.textContent += "\n⚠️ Server busy (503). Waiting " + (delay/1000) + "s...";
-            delay = Math.min(delay * 2, 60000); // exponential backoff, max 60s
-            setTimeout(runNext, delay);
-            return;
-        }
+    log.textContent += "\\n" + JSON.stringify(data, null, 2);
 
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch {
-            log.textContent += "\n❌ Non-JSON:\n" + text.slice(0, 200);
-            delay = Math.min(delay * 2, 60000);
-            setTimeout(runNext, delay);
-            return;
-        }
-
-        // success → reset delay
-        delay = 2000;
-
-        log.textContent += "\n" + JSON.stringify(data, null, 2);
-
-        if (data.status !== 'completed') {
-            setTimeout(runNext, delay);
-        } else {
-            log.textContent += "\n\n✅ ALL DATABASES EXPORTED";
-        }
-
-    } catch (e) {
-        log.textContent += "\n⚠️ Network error. Retrying in " + (delay/1000) + "s";
-        delay = Math.min(delay * 2, 60000);
-        setTimeout(runNext, delay);
+    if (data.status !== 'completed') {
+        setTimeout(runNext, 1000);
+    } else {
+        log.textContent += "\\n\\n✅ ALL DATABASES EXPORTED";
     }
 }
 
 runNext();
 </script>
-
 </body>
 </html>
 HTML;
