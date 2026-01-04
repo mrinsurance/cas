@@ -441,7 +441,7 @@ pre { background:#111; color:#0f0; padding:15px; }
 <pre id="log">Starting export...</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret=hp20nbd";
+const RUN_URL = "https://casadarsh.himachalsoceity.com/db-import/run?secret={$secret}";
 const log = document.getElementById('log');
 
 let delay = 2000; // start with 2 seconds
