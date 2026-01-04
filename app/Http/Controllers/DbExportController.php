@@ -21,11 +21,25 @@ class DbExportController extends Controller
             ini_set('memory_limit', '512M');
             set_time_limit(0);
 
-            $databases  = config('db_exporter.databases', []);
+            $databases  = config('db_exporter.databases');
             $exportPath = config('db_exporter.path');
+
+            if (empty($databases)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No databases configured'
+                ], 500);
+            }
 
             if (!is_dir($exportPath)) {
                 mkdir($exportPath, 0755, true);
+            }
+
+            if (!is_writable($exportPath)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Export path not writable: ' . $exportPath
+                ], 500);
             }
 
             $progressFile = storage_path('db-export-progress.txt');
@@ -41,19 +55,18 @@ class DbExportController extends Controller
             $db   = $databases[$index];
             $file = "{$exportPath}/{$db}.sql.gz";
 
-            // Switch DB safely
+            // Switch DB
             config(['database.connections.mysql.database' => $db]);
             DB::purge('mysql');
             DB::reconnect('mysql');
 
-            // Open gzip
             $fp = gzopen($file, 'w9');
             if (!$fp) {
-                throw new \Exception("Cannot open file {$file}");
+                throw new \Exception("Cannot create file: {$file}");
             }
 
             gzwrite($fp, "-- Database: {$db}\n");
-            gzwrite($fp, "-- Exported at: " . now() . "\n\n");
+            gzwrite($fp, "-- Exported at: " . date('Y-m-d H:i:s') . "\n\n");
             gzwrite($fp, "SET FOREIGN_KEY_CHECKS=0;\n\n");
 
             $tables = DB::select('SHOW TABLES');
@@ -61,12 +74,10 @@ class DbExportController extends Controller
             foreach ($tables as $tableObj) {
                 $table = array_values((array)$tableObj)[0];
 
-                // Structure
                 $create = DB::select("SHOW CREATE TABLE `$table`")[0]->{'Create Table'};
                 gzwrite($fp, "DROP TABLE IF EXISTS `$table`;\n");
                 gzwrite($fp, $create . ";\n\n");
 
-                // Data (smaller chunks = more stable)
                 DB::table($table)->orderByRaw('1')->chunk(200, function ($rows) use ($fp, $table) {
                     foreach ($rows as $row) {
                         $values = array_map(function ($value) {
@@ -85,21 +96,20 @@ class DbExportController extends Controller
                 gzwrite($fp, "\n");
             }
 
-            gzwrite($fp, "\nSET FOREIGN_KEY_CHECKS=1;\n");
+            gzwrite($fp, "SET FOREIGN_KEY_CHECKS=1;\n");
             gzclose($fp);
 
-            // Save progress
             file_put_contents($progressFile, $index + 1);
 
             return response()->json([
                 'status'   => 'exported',
-                'database' => $db
+                'database' => $db,
+                'file'     => $file
             ]);
 
         } catch (\Throwable $e) {
-            // 🚨 ALWAYS JSON — NEVER HTML
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => $e->getMessage()
             ], 500);
         }

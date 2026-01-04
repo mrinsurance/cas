@@ -444,34 +444,39 @@ Route::get('/db-export/runner', function () {
 <pre id="log">Starting export…</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={$secret}";
+const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={{$secret}}";
 const logEl = document.getElementById('log');
 
 async function runNext() {
     try {
-        const res = await fetch(RUN_URL + "&_=" + Date.now(), {
-            cache: "no-store",
-            credentials: "same-origin"
-        });
+        const res = await fetch(RUN_URL + "&_=" + Date.now(), { cache: "no-store" });
+        const text = await res.text();
 
-        const data = await res.json();
-        logEl.textContent += "\\n" + JSON.stringify(data, null, 2);
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            logEl.textContent += "\n❌ Non-JSON response:\n" + text.substring(0, 300);
+            return;
+        }
+
+        logEl.textContent += "\n" + JSON.stringify(data, null, 2);
 
         if (data.status !== "completed") {
-            setTimeout(runNext, 1000); // wait 1s then next DB
+            setTimeout(runNext, 1500);
         } else {
-            logEl.textContent += "\\n\\n✅ ALL DATABASES EXPORTED";
+            logEl.textContent += "\n\n✅ ALL DATABASES EXPORTED";
         }
 
     } catch (e) {
-        logEl.textContent += "\\n❌ ERROR: " + e;
-        setTimeout(runNext, 3000); // retry safely
+        logEl.textContent += "\n❌ ERROR: " + e;
+        setTimeout(runNext, 3000);
     }
 }
 
-// START
 runNext();
 </script>
+
 
 </body>
 </html>
