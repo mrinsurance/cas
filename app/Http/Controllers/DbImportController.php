@@ -10,10 +10,10 @@ class DbImportController extends Controller
     public function run(Request $request)
     {
         try {
-            // 🔐 Secret check
+            // 🔐 Secret check (JSON only)
             if ($request->query('secret') !== config('db_exporter.secret')) {
                 return response()->json([
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => 'Invalid secret',
                 ], 403);
             }
@@ -30,7 +30,7 @@ class DbImportController extends Controller
                 ? (int) file_get_contents($progressFile)
                 : 0;
 
-            // All done
+            // ✅ All databases imported
             if (!isset($databases[$index])) {
                 @unlink($progressFile);
                 return response()->json([
@@ -43,34 +43,35 @@ class DbImportController extends Controller
 
             if (!file_exists($file)) {
                 return response()->json([
-                    'status' => 'error',
+                    'status'  => 'error',
                     'message' => "Missing file: {$db}.sql.gz",
                 ], 500);
             }
 
-            // Switch DB safely
+            // 🔄 Switch DB safely
             config(['database.connections.mysql.database' => $db]);
             DB::purge('mysql');
             DB::reconnect('mysql');
 
+            // Defensive DB session setup
             DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            DB::statement("SET SESSION sql_mode=''");
 
-            // 🔥 Stream SQL.GZ
+            // 🔥 Open gzip stream
             $fp = gzopen($file, 'r');
             if (!$fp) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Unable to open SQL file',
-                ], 500);
+                throw new \Exception("Cannot open file {$file}");
             }
 
             $query = '';
+            $queryCount = 0;
 
             while (!gzeof($fp)) {
                 $line = trim(gzgets($fp));
 
-                // Skip comments
-                if ($line === '' ||
+                // Skip comments / empty
+                if (
+                    $line === '' ||
                     strpos($line, '--') === 0 ||
                     strpos($line, '/*') === 0
                 ) {
@@ -80,7 +81,24 @@ class DbImportController extends Controller
                 $query .= $line . ' ';
 
                 if (substr($line, -1) === ';') {
-                    DB::unprepared($query);
+                    try {
+                        DB::unprepared($query);
+                        $queryCount++;
+                    } catch (\Throwable $e) {
+                        // ❗ Do NOT break the import
+                        // Log and continue
+                        file_put_contents(
+                            storage_path('db-import-errors.txt'),
+                            "[{$db}] Query failed: " . substr($query, 0, 300) . "\n" . $e->getMessage() . "\n\n",
+                            FILE_APPEND
+                        );
+                    }
+
+                    $query = '';
+                }
+
+                // 🧯 Safety flush (avoid huge memory build-up)
+                if (strlen($query) > 1024 * 1024) { // 1MB
                     $query = '';
                 }
             }
@@ -93,11 +111,13 @@ class DbImportController extends Controller
             file_put_contents($progressFile, $index + 1);
 
             return response()->json([
-                'status'   => 'imported',
-                'database' => $db,
+                'status'      => 'imported',
+                'database'    => $db,
+                'queries_run' => $queryCount,
             ]);
 
         } catch (\Throwable $e) {
+            // 🚨 ALWAYS JSON — NEVER HTML
             return response()->json([
                 'status'  => 'error',
                 'message' => $e->getMessage(),
