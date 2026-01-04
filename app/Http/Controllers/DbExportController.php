@@ -24,22 +24,8 @@ class DbExportController extends Controller
             $databases  = config('db_exporter.databases');
             $exportPath = config('db_exporter.path');
 
-            if (empty($databases)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'No databases configured'
-                ], 500);
-            }
-
             if (!is_dir($exportPath)) {
                 mkdir($exportPath, 0755, true);
-            }
-
-            if (!is_writable($exportPath)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Export path not writable: ' . $exportPath
-                ], 500);
             }
 
             $progressFile = storage_path('db-export-progress.txt');
@@ -47,22 +33,25 @@ class DbExportController extends Controller
                 ? (int) file_get_contents($progressFile)
                 : 0;
 
+            // ✅ ALL DONE
             if (!isset($databases[$index])) {
                 @unlink($progressFile);
-                return response()->json(['status' => 'completed']);
+                return response()->json([
+                    'status' => 'completed'
+                ]);
             }
 
             $db   = $databases[$index];
             $file = "{$exportPath}/{$db}.sql.gz";
 
-            // Switch DB
+            // 🔄 Switch DB
             config(['database.connections.mysql.database' => $db]);
             DB::purge('mysql');
             DB::reconnect('mysql');
 
             $fp = gzopen($file, 'w9');
             if (!$fp) {
-                throw new \Exception("Cannot create file: {$file}");
+                throw new \Exception("Cannot create file {$file}");
             }
 
             gzwrite($fp, "-- Database: {$db}\n");
@@ -80,10 +69,8 @@ class DbExportController extends Controller
 
                 DB::table($table)->orderByRaw('1')->chunk(200, function ($rows) use ($fp, $table) {
                     foreach ($rows as $row) {
-                        $values = array_map(function ($value) {
-                            return is_null($value)
-                                ? 'NULL'
-                                : "'" . addslashes($value) . "'";
+                        $values = array_map(function ($v) {
+                            return is_null($v) ? 'NULL' : "'" . addslashes($v) . "'";
                         }, (array)$row);
 
                         gzwrite(
@@ -99,17 +86,18 @@ class DbExportController extends Controller
             gzwrite($fp, "SET FOREIGN_KEY_CHECKS=1;\n");
             gzclose($fp);
 
+            // 🔄 Move to next DB
             file_put_contents($progressFile, $index + 1);
 
             return response()->json([
                 'status'   => 'exported',
                 'database' => $db,
-                'file'     => $file
+                'file'     => basename($file)
             ]);
 
         } catch (\Throwable $e) {
             return response()->json([
-                'status' => 'error',
+                'status'  => 'error',
                 'message' => $e->getMessage()
             ], 500);
         }

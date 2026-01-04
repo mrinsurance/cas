@@ -419,65 +419,53 @@ Route::get('/test-gzip', function () {
 });
 
 Route::get('/db-export/runner', function () {
-	$secret = request('secret');
+    $secret = request('secret');
+    abort_if(!$secret, 403);
 
-	if (!$secret) {
-		abort(403, 'Secret missing');
-	}
-
-	return <<<HTML
+    return <<<HTML
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>DB Export Auto Runner</title>
-    <style>
-        body { font-family: Arial; padding: 20px; background: #f7f7f7; }
-        pre { background: #111; color: #0f0; padding: 15px; max-height: 500px; overflow: auto; }
-    </style>
+<meta charset="utf-8">
+<title>DB Export Runner</title>
+<style>
+body { font-family: Arial; padding:20px; }
+pre { background:#111; color:#0f0; padding:15px; }
+</style>
 </head>
 <body>
 
 <h2>Database Export Running…</h2>
-<p>Do not close this page.</p>
+<p>One database per step. Please wait.</p>
 
-<pre id="log">Starting export…</pre>
+<pre id="log">Starting export...</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={{$secret}}";
-const logEl = document.getElementById('log');
+const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={$secret}";
+const log = document.getElementById('log');
 
 async function runNext() {
-    try {
-        const res = await fetch(RUN_URL + "&_=" + Date.now(), { cache: "no-store" });
-        const text = await res.text();
+    const res = await fetch(RUN_URL + '&_=' + Date.now(), { cache:'no-store' });
+    const text = await res.text();
 
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            logEl.textContent += "\n❌ Non-JSON response:\n" + text.substring(0, 300);
-            return;
-        }
+    let data;
+    try { data = JSON.parse(text); }
+    catch {
+        log.textContent += "\\n❌ Non-JSON response:\\n" + text.slice(0,300);
+        return;
+    }
 
-        logEl.textContent += "\n" + JSON.stringify(data, null, 2);
+    log.textContent += "\\n" + JSON.stringify(data, null, 2);
 
-        if (data.status !== "completed") {
-            setTimeout(runNext, 1500);
-        } else {
-            logEl.textContent += "\n\n✅ ALL DATABASES EXPORTED";
-        }
-
-    } catch (e) {
-        logEl.textContent += "\n❌ ERROR: " + e;
-        setTimeout(runNext, 3000);
+    if (data.status !== 'completed') {
+        setTimeout(runNext, 1000);
+    } else {
+        log.textContent += "\\n\\n✅ ALL DATABASES EXPORTED";
     }
 }
 
 runNext();
 </script>
-
-
 </body>
 </html>
 HTML;
