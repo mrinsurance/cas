@@ -64,11 +64,5 @@ return [
             'cassurarwan',
             'castatwani',
             'casuttap',
-            'jantampcs',
-            'kmcslghm',
-            'ksmcsl',
-            'lahar',
-            'ngindianidhi',
-            'ntccslnadaun',
     ],
 ];
