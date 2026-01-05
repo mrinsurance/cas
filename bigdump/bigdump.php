@@ -2,43 +2,24 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-/* Load runtime config */
 if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
 
-/* ✅ OVERRIDE SQL DIRECTORY (THIS IS THE KEY FIX) */
+/** ✅ Dump folder (your real path) */
 $upload_dir = realpath(__DIR__ . '/../storage/db-imports');
-
-/* Safety check */
 if (!$upload_dir || !is_dir($upload_dir)) {
-    die('❌ SQL directory not found or not accessible');
+    die('❌ SQL directory not found: ' . __DIR__ . '/../storage/db-imports');
 }
 
-echo $filename;
-exit;
-
-/* DO NOT overwrite runtime DB credentials */
+/** ✅ Protect runtime values from being overwritten later */
 $db_server   = $db_server   ?? 'localhost';
 $db_name     = $db_name     ?? '';
 $db_username = $db_username ?? '';
 $db_password = $db_password ?? '';
 
-
-// Connection charset should be the same as the dump file charset (utf8, latin1, cp1251, koi8r etc.)
-// See http://dev.mysql.com/doc/refman/5.0/en/charset-charsets.html for the full list
-// Change this if you have problems with non-latin letters
-
-$db_connection_charset = 'utf8';
-
-// OPTIONAL SETTINGS 
-
-$filename = $filename ?? '';     // Specify the dump filename to suppress the file selection dialog
-$ajax               = true;   // AJAX mode: import will be done without refreshing the website
-$linespersession    = 3000;   // Lines to be executed per one import session
-$delaypersession    = 0;      // You can specify a sleep time in milliseconds after each session
-                              // Works only if JavaScript is activated. Use to reduce server overrun
-
+$filename    = $filename    ?? 'casadarsh.sql.gz';
+$ajax        = $ajax        ?? true;
 // CSV related settings (only if you use a CSV dump)
 
 $csv_insert_table   = '';     // Destination table for CSV files
