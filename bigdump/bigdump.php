@@ -41,7 +41,7 @@ error_reporting(E_ALL);
 
 // Database configuration
 
-$db_server   = 'localhost';
+$db_server   = '127.0.0.1';
 $db_name     = '';
 $db_username = '';
 $db_password = ''; 
