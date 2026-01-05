@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'db_server'   => 'localhost',
+    'db_server'   => '127.0.0.1',
     'db_username' => 'himachal',
     'db_password' => '6nwf6ji1w6yn',
 
