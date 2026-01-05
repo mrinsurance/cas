@@ -2,42 +2,54 @@
 
 set_time_limit(0);
 
-// directory containing dumps
+/**
+ * Folder that contains the .sql.gz files
+ * Keep it as current folder (bigdump) for safety.
+ */
 $dir = __DIR__;
 
-// get all sql / sql.gz files
-$files = array_values(array_filter(scandir($dir), function ($file) {
-    return preg_match('/\.(sql|sql\.gz)$/i', $file);
+/**
+ * Get only .sql.gz files (ignore .sql and everything else)
+ */
+$files = array_values(array_filter(scandir($dir), function ($file) use ($dir) {
+    return is_file($dir . '/' . $file) && preg_match('/\.sql\.gz$/i', $file);
 }));
 
+// sort for predictable order
+sort($files);
+
 if (empty($files)) {
-    die('❌ No SQL files found');
+    die('❌ No .sql.gz files found in this directory.');
 }
 
 // index from query string
 $index = isset($_GET['i']) ? (int) $_GET['i'] : 0;
 
-// finished
+// done
 if (!isset($files[$index])) {
-    echo "✅ All files downloaded";
+    echo "✅ All .sql.gz files downloaded.";
     exit;
 }
 
 $file = $files[$index];
 $path = $dir . '/' . $file;
 
-// send headers for download
+if (!is_readable($path)) {
+    die("❌ File not readable: " . htmlspecialchars($file));
+}
+
+// Download headers
 header('Content-Description: File Transfer');
-header('Content-Type: application/octet-stream');
+header('Content-Type: application/gzip');
 header('Content-Disposition: attachment; filename="' . basename($file) . '"');
 header('Content-Length: ' . filesize($path));
-header('Cache-Control: no-cache');
+header('Cache-Control: no-store, no-cache, must-revalidate');
 header('Pragma: public');
 
-// output file
+// Stream the file
 readfile($path);
 
-// auto-trigger next download
+// After download starts, trigger next file download
 echo "<script>
     setTimeout(function () {
         window.location.href = '?i=" . ($index + 1) . "';
