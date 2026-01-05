@@ -73,12 +73,6 @@ class DbCleanerController extends Controller
             'cassurarwan',
             'castatwani',
             'casuttap',
-            'jantampcs',
-            'kmcslghm',
-            'ksmcsl',
-            'lahar',
-            'ncgindianidhi',
-            'ntccslnadaun',
         ];
 
         $result = [];
