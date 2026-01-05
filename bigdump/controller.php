@@ -1,15 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 $config = require __DIR__ . '/config.php';
 
-echo "<pre>";
-var_dump($_GET['secret'] ?? 'NO_SECRET');
-var_dump($config['secret'] ?? 'NO_CONFIG_SECRET');
-exit;
-
-if ($_GET['secret'] ?? '' !== $config['secret']) {
+if (($_GET['secret'] ?? '') !== $config['secret']) {
     http_response_code(403);
     exit('Forbidden');
 }
@@ -22,8 +14,8 @@ $progress = file_exists($progressFile)
 $index = $progress['index'];
 
 if (!isset($config['databases'][$index])) {
-    echo "✅ ALL DATABASES IMPORTED SUCCESSFULLY";
     unlink($progressFile);
+    echo "✅ ALL DATABASES IMPORTED";
     exit;
 }
 
@@ -34,9 +26,7 @@ if (!file_exists($sqlFile)) {
     exit("❌ Missing SQL file: {$sqlFile}");
 }
 
-/**
- * Generate dynamic BigDump config
- */
+// generate runtime config
 file_put_contents(__DIR__ . '/bigdump-runtime.php', <<<PHP
 <?php
 \$db_server   = '{$config['db_server']}';
@@ -49,16 +39,8 @@ file_put_contents(__DIR__ . '/bigdump-runtime.php', <<<PHP
 PHP
 );
 
-/**
- * Move pointer to next DB BEFORE import
- * (safe even if page refreshes)
- */
-file_put_contents($progressFile, json_encode([
-    'index' => $index + 1
-]));
+// move pointer first (safe)
+file_put_contents($progressFile, json_encode(['index' => $index + 1]));
 
-/**
- * Redirect to BigDump
- */
 header("Location: bigdump.php");
 exit;
