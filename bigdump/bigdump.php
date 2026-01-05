@@ -30,7 +30,7 @@ $db_connection_charset = 'utf8';
 
 // OPTIONAL SETTINGS 
 
-// $filename           = '';     // Specify the dump filename to suppress the file selection dialog
+$filename = $filename ?? '';     // Specify the dump filename to suppress the file selection dialog
 $ajax               = true;   // AJAX mode: import will be done without refreshing the website
 $linespersession    = 3000;   // Lines to be executed per one import session
 $delaypersession    = 0;      // You can specify a sleep time in milliseconds after each session
@@ -1146,13 +1146,13 @@ function create_ajax_script()
 
 }
 // ================= AUTO PROCEED TO NEXT DATABASE =================
-if ($auto_proceed && isset($_REQUEST['start'])) {
+// if ($auto_proceed && isset($_REQUEST['start'])) {
 
-    // Import finished (EOF reached)
-    if ($linenumber < ($_REQUEST['start'] + $linespersession)) {
-        header("Location: controller.php?secret=hp20nbd");
-        exit;
-    }
-}
+//     // Import finished (EOF reached)
+//     if ($linenumber < ($_REQUEST['start'] + $linespersession)) {
+//         header("Location: controller.php?secret=hp20nbd");
+//         exit;
+//     }
+// }
 
 ?>
