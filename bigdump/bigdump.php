@@ -3,6 +3,11 @@ if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
 
+// 🔥 FORCE SQL DIRECTORY
+$upload_dir = __DIR__ . '/sql';
+
+// AUTO CONTINUE FLAG
+$auto_proceed = $auto_proceed ?? false;
 
 error_reporting(E_ALL);
 
@@ -1169,11 +1174,14 @@ function create_ajax_script()
 <?php
 
 }
+// ================= AUTO PROCEED TO NEXT DATABASE =================
+if ($auto_proceed && isset($_REQUEST['start'])) {
 
-// if ($auto_proceed) {
-//     header("Location: controller.php?secret=hp20nbd");
-//     exit;
-// }
-
+    // Import finished (EOF reached)
+    if ($linenumber < ($_REQUEST['start'] + $linespersession)) {
+        header("Location: controller.php?secret=hp20nbd");
+        exit;
+    }
+}
 
 ?>

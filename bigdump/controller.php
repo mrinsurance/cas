@@ -1,51 +1,55 @@
 <?php
 
-// ================= SECURITY =================
-if (!isset($_GET['secret']) || $_GET['secret'] !== 'hp20nbd') {
+$config = require __DIR__ . '/config.php';
+
+/* ================= SECURITY ================= */
+if (!isset($_GET['secret']) || $_GET['secret'] !== $config['secret']) {
     http_response_code(403);
     exit('Forbidden');
 }
 
-// ================= PATHS =================
-$baseUrl   = 'https://casadarsh.himachalsoceity.com/bigdump';
+/* ================= FILES ================= */
 $queueFile = __DIR__ . '/queue.txt';
 $runtime   = __DIR__ . '/bigdump-runtime.php';
 
-// ================= INITIAL QUEUE =================
+/* ================= INIT QUEUE ================= */
 if (!file_exists($queueFile)) {
-    file_put_contents($queueFile, implode("\n", [
-        'casadarsh',
-        'casbalduhak',
-        'casbara',
-    ]));
+    file_put_contents($queueFile, implode("\n", $config['databases']));
 }
 
-// ================= READ QUEUE =================
+/* ================= READ QUEUE ================= */
 $dbs = file($queueFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-// ✅ ALL DONE
 if (!$dbs || count($dbs) === 0) {
     @unlink($queueFile);
+    @unlink($runtime);
     echo "✅ ALL DATABASES IMPORTED SUCCESSFULLY";
     exit;
 }
 
-// ================= NEXT DB =================
+/* ================= NEXT DB ================= */
 $db = array_shift($dbs);
 file_put_contents($queueFile, implode("\n", $dbs));
 
-// ================= RUNTIME FILE =================
+$sqlFile = realpath($config['sql_path'] . "/{$db}.sql.gz");
+
+if (!$sqlFile || !file_exists($sqlFile)) {
+    exit("❌ SQL file not found for database: {$db}");
+}
+
+/* ================= RUNTIME CONFIG ================= */
 file_put_contents($runtime, <<<PHP
 <?php
-\$db_server   = '127.0.0.1';
-\$db_username = 'himachal';
-\$db_password = '6nwf6ji1w6yn';
+\$db_server   = '{$config['db_server']}';
+\$db_username = '{$config['db_username']}';
+\$db_password = '{$config['db_password']}';
 \$db_name     = '{$db}';
 \$filename    = '{$db}.sql.gz';
 \$ajax        = true;
+\$auto_proceed = true;
 PHP
 );
 
-// ================= REDIRECT =================
-header("Location: {$baseUrl}/bigdump.php?start=1&fn={$db}.sql.gz");
+/* ================= REDIRECT ================= */
+header("Location: bigdump.php?start=1&fn={$db}.sql.gz");
 exit;
