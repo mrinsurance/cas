@@ -6,14 +6,9 @@ if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
 
-/** ✅ Dump folder (your real path) */
-$upload_dir = realpath(__DIR__ . '/../storage/db-imports');
-if (!$upload_dir || !is_dir($upload_dir)) {
-    die('❌ SQL directory not found: ' . __DIR__ . '/../storage/db-imports');
-}
 
 /** ✅ Protect runtime values from being overwritten later */
-$db_server   = $db_server   ?? 'localhost';
+$db_server   = $db_server   ?? '127.0.0.1';
 $db_name     = $db_name     ?? '';
 $db_username = $db_username ?? '';
 $db_password = $db_password ?? '';
