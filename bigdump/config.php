@@ -8,8 +8,8 @@ return [
     // Ordered list of databases
     'databases' => [
         'casadarsh',
-        'casbalduhak',
-        'casbara',
+        // 'casbalduhak',
+        // 'casbara',
     ],
 
     // Where SQL files are stored
