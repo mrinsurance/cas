@@ -1,42 +1,34 @@
 <?php
 
-$config = require __DIR__ . '/config.php';
-
-if (!isset($_GET['secret']) || $_GET['secret'] !== $config['secret']) {
+if ($_GET['secret'] !== 'hp20nbd') {
     http_response_code(403);
     exit('Forbidden');
 }
 
-$progressFile = __DIR__ . '/.progress';
-$index = file_exists($progressFile) ? (int) file_get_contents($progressFile) : 0;
+$queueFile = __DIR__ . '/queue.txt';
 
-$databases = $config['databases'];
-
-if (!isset($databases[$index])) {
-    @unlink($progressFile);
-    @unlink(__DIR__ . '/bigdump-runtime.php');
-    echo "✅ ALL DATABASES IMPORTED";
-    exit;
+if (!file_exists($queueFile)) {
+    file_put_contents($queueFile, implode("\n", [
+        'casadarsh',
+        'casbalduhak',
+        'casbara'
+    ]));
 }
 
-$dbName = $databases[$index];
+$dbs = file($queueFile, FILE_IGNORE_NEW_LINES);
+$db  = array_shift($dbs);
 
-// 🔥 CREATE bigdump-runtime.php HERE
-file_put_contents(__DIR__ . '/bigdump-runtime.php', <<<PHP
+file_put_contents($queueFile, implode("\n", $dbs));
+
+file_put_contents(__DIR__.'/bigdump-runtime.php', <<<PHP
 <?php
 \$db_server   = '127.0.0.1';
-\$db_name     = '{$dbName}';
-\$db_username = '{$config['db_username']}';
-\$db_password = '{$config['db_password']}';
-\$filename    = '{$dbName}.sql.gz';
-\$use_gzip    = true;
+\$db_username = 'himachal';
+\$db_password = '6nwf6ji1w6yn';
+\$db_name     = '{$db}';
+\$filename    = '{$db}.sql.gz';
 \$ajax        = true;
-PHP
-);
+PHP);
 
-// Save progress
-file_put_contents($progressFile, $index + 1);
-
-// Redirect to BigDump
-header("Location: bigdump.php?start=1&fn={$dbName}.sql.gz");
+header("Location: bigdump.php?start=1&fn={$db}.sql.gz");
 exit;
