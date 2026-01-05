@@ -15,6 +15,8 @@ if (!$upload_dir || !is_dir($upload_dir)) {
     die('❌ SQL directory not found or not accessible');
 }
 
+dd($filename);
+
 /* DO NOT overwrite runtime DB credentials */
 $db_server   = $db_server   ?? 'localhost';
 $db_name     = $db_name     ?? '';
