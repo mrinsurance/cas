@@ -1,5 +1,13 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 $config = require __DIR__ . '/config.php';
+
+echo "<pre>";
+var_dump($_GET['secret'] ?? 'NO_SECRET');
+var_dump($config['secret'] ?? 'NO_CONFIG_SECRET');
+exit;
 
 if ($_GET['secret'] ?? '' !== $config['secret']) {
     http_response_code(403);
