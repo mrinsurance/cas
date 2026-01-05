@@ -5,5 +5,5 @@ $db_name     = 'casadarsh';
 $db_username = 'himachal';
 $db_password = '6nwf6ji1w6yn';
 
-$filename = '/../storage/db-imports/casadarsh.sql.gz';
+$filename = 'casadarsh.sql.gz';
 $ajax     = true;

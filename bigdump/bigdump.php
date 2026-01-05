@@ -2,50 +2,25 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+/* Load runtime config */
 if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
 
+/* ✅ OVERRIDE SQL DIRECTORY (THIS IS THE KEY FIX) */
+$upload_dir = realpath(__DIR__ . '/../storage/db-imports');
 
-// BigDump ver. 0.37b from 2023-09-25
-// Staggered import of an large MySQL Dump (like phpMyAdmin 2.x Dump)
-// Even through the webservers with hard runtime limit and those in safe mode
-// Works fine with latest Chrome, Internet Explorer and Firefox
+/* Safety check */
+if (!$upload_dir || !is_dir($upload_dir)) {
+    die('❌ SQL directory not found or not accessible');
+}
 
-// Author:       Alexey Ozerov (alexey at ozerov dot de) 
-//               AJAX & CSV functionalities: Krzysiek Herod (kr81uni at wp dot pl) 
-// Copyright:    GPL (C) 2003-2023
-// More Infos:   http://www.ozerov.de/bigdump
+/* DO NOT overwrite runtime DB credentials */
+$db_server   = $db_server   ?? 'localhost';
+$db_name     = $db_name     ?? '';
+$db_username = $db_username ?? '';
+$db_password = $db_password ?? '';
 
-// This program is free software; you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the Free Software Foundation;
-// either version 2 of the License, or (at your option) any later version.
-
-// THIS SCRIPT IS PROVIDED AS IS, WITHOUT ANY WARRANTY OR GUARANTEE OF ANY KIND
-
-// USAGE
-
-// 1. Adjust the database configuration and charset in this file
-// 2. Remove the old tables on the target database if your dump doesn't contain "DROP TABLE"
-// 3. Create the working directory (e.g. dump) on your web server
-// 4. Upload bigdump.php and your dump files (.sql, .gz) via FTP to the working directory
-// 5. Run the bigdump.php from your browser via URL like http://www.yourdomain.com/dump/bigdump.php
-// 6. BigDump can start the next import session automatically if you enable the JavaScript
-// 7. Wait for the script to finish, do not close the browser window
-// 8. IMPORTANT: Remove bigdump.php and your dump files from the web server
-
-// If Timeout errors still occure you may need to adjust the $linepersession setting in this file
-
-// LAST CHANGES
-
-// *** PHP8 compatibility
-
-// Database configuration
-
-$db_server   = '127.0.0.1';
-$db_name     = '';
-$db_username = '';
-$db_password = ''; 
 
 // Connection charset should be the same as the dump file charset (utf8, latin1, cp1251, koi8r etc.)
 // See http://dev.mysql.com/doc/refman/5.0/en/charset-charsets.html for the full list
@@ -55,7 +30,7 @@ $db_connection_charset = 'utf8';
 
 // OPTIONAL SETTINGS 
 
-$filename           = '';     // Specify the dump filename to suppress the file selection dialog
+// $filename           = '';     // Specify the dump filename to suppress the file selection dialog
 $ajax               = true;   // AJAX mode: import will be done without refreshing the website
 $linespersession    = 3000;   // Lines to be executed per one import session
 $delaypersession    = 0;      // You can specify a sleep time in milliseconds after each session
