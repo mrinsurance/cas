@@ -1,15 +1,11 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
 
-// 🔥 FORCE SQL DIRECTORY
-$upload_dir = __DIR__ . '/sql';
-
-// AUTO CONTINUE FLAG
-$auto_proceed = $auto_proceed ?? false;
-
-error_reporting(E_ALL);
 
 // BigDump ver. 0.37b from 2023-09-25
 // Staggered import of an large MySQL Dump (like phpMyAdmin 2.x Dump)
