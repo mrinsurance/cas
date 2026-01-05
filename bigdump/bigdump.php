@@ -1129,14 +1129,15 @@ function create_ajax_script()
 <?php
 
 }
-// ================= AUTO PROCEED TO NEXT DATABASE =================
-// if ($auto_proceed && isset($_REQUEST['start'])) {
-
-//     // Import finished (EOF reached)
-//     if ($linenumber < ($_REQUEST['start'] + $linespersession)) {
-//         header("Location: controller.php?secret=hp20nbd");
-//         exit;
-//     }
-// }
+// ===== AUTO RETURN TO CONTROLLER AFTER FINISH =====
+if (
+    isset($_REQUEST['start']) &&
+    isset($linenumber) &&
+    $linenumber < ($_REQUEST['start'] + $linespersession)
+) {
+    // Import finished
+    header("Location: controller.php?secret=hp20nbd");
+    exit;
+}
 
 ?>
