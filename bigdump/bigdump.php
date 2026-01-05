@@ -1,5 +1,9 @@
 <?php
-require_once __DIR__ . '/bigdump-runtime.php';
+<?php
+if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
+    require __DIR__ . '/bigdump-runtime.php';
+}
+
 
 error_reporting(E_ALL);
 
