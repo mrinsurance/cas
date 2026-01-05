@@ -846,10 +846,20 @@ skin_open();
 // Finish message and restart the script
 
     if ($linenumber<$_REQUEST["start"]+$linespersession)
-    { echo ("<p class=\"successcentr\">Congratulations: End of file reached, assuming OK</p>\n");
+    { 
+      echo ("<p class=\"successcentr\">Congratulations: End of file reached, assuming OK</p>\n");
       echo ("<p class=\"successcentr\">IMPORTANT: REMOVE YOUR DUMP FILE and BIGDUMP SCRIPT FROM SERVER NOW!</p>\n");
       echo ("<p class=\"centr\">Thank you for using this tool! Please rate <a href=\"http://www.hotscripts.com/listing/bigdump/?RID=403\" target=\"_blank\">Bigdump at Hotscripts.com</a></p>\n");
       echo ("<p class=\"centr\">You can send me some bucks or euros as appreciation via PayPal. Thank you!</p>\n");
+
+  // 🔥 AUTO-REDIRECT TO CONTROLLER (NEXT DB)
+  echo ("<script>
+      setTimeout(function () {
+          window.location.href = 'controller.php?secret=hp20nbd';
+      }, 2000);
+  </script>");
+
+  $error=true;
 ?>
 
 <!-- Start Paypal donation code -->
