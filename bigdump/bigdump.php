@@ -2,20 +2,25 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+/* Load runtime config */
 if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
 
+/* ===== REQUIRED DEFAULTS (DO NOT REMOVE) ===== */
+$db_connection_charset = $db_connection_charset ?? 'utf8';
+$linespersession       = $linespersession ?? 3000;
+$delaypersession       = $delaypersession ?? 0;
 
-/** ✅ Protect runtime values from being overwritten later */
-$db_server   = $db_server   ?? '127.0.0.1';
+/* Protect DB credentials */
+$db_server   = $db_server   ?? 'localhost';
 $db_name     = $db_name     ?? '';
 $db_username = $db_username ?? '';
 $db_password = $db_password ?? '';
 
-$filename    = $filename    ?? 'casadarsh.sql.gz';
-$ajax        = $ajax        ?? true;
-// CSV related settings (only if you use a CSV dump)
+/* File settings */
+$filename = $filename ?? 'casadarsh.sql.gz';
+$ajax     = $ajax ?? true;
 
 $csv_insert_table   = '';     // Destination table for CSV files
 $csv_preempty_table = false;  // true: delete all entries from table specified in $csv_insert_table before processing
