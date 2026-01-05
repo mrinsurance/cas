@@ -1,5 +1,4 @@
 <?php
-<?php
 if (file_exists(__DIR__ . '/bigdump-runtime.php')) {
     require __DIR__ . '/bigdump-runtime.php';
 }
