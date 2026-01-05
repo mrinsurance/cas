@@ -39,7 +39,7 @@ $comment[]='/*!';                     // Or add your own string to leave out oth
 
 // Pre-queries: SQL queries to be executed at the beginning of each import session
 
-// $pre_query[]='SET foreign_key_checks = 0';
+$pre_query[]='SET foreign_key_checks = 0';
 // $pre_query[]='Add additional queries if you want here';
 
 // Default query delimiter: this character at the line end tells Bigdump where a SQL statement ends
