@@ -2,10 +2,10 @@
 
 /* ================== CONFIG ================== */
 
-// 🔐 security token
+// secret token
 $SECRET = 'hp20nbd';
 
-// 🔁 databases to import (MASTER LIST – NEVER CHANGES)
+// databases to import (MASTER LIST)
 $ALL_DATABASES = [
     'casadarsh',
     'casbalduhak',
@@ -13,9 +13,9 @@ $ALL_DATABASES = [
 ];
 
 // DB credentials
-$DB_SERVER   = 'localhost';
-$DB_USER     = 'himachal';
-$DB_PASS     = '6nwf6ji1w6yn';
+$DB_SERVER = 'localhost';
+$DB_USER   = 'himachal';
+$DB_PASS   = '6nwf6ji1w6yn';
 
 /* ================== SECURITY ================== */
 if (!isset($_GET['secret']) || $_GET['secret'] !== $SECRET) {
@@ -24,29 +24,52 @@ if (!isset($_GET['secret']) || $_GET['secret'] !== $SECRET) {
 }
 
 /* ================== FILES ================== */
-$queueFile   = __DIR__ . '/queue.txt';
-$runtimeFile = __DIR__ . '/bigdump-runtime.php';
+$queueFile     = __DIR__ . '/queue.txt';
+$runtimeFile   = __DIR__ . '/bigdump-runtime.php';
+$completedFile = __DIR__ . '/.completed';
+$lockFile      = __DIR__ . '/.running';
+
+/* ================== RESET MODE ================== */
+if (isset($_GET['reset']) && $_GET['reset'] == '1') {
+    @unlink($queueFile);
+    @unlink($completedFile);
+}
+
+/* ================== LOCK PROTECTION ================== */
+if (file_exists($lockFile)) {
+    echo "⛔ Import already running. Please wait until it finishes.";
+    exit;
+}
+file_put_contents($lockFile, time());
+
+/* ================== STOP IF ALREADY DONE ================== */
+if (file_exists($completedFile)) {
+    @unlink($lockFile);
+    echo "✅ Import already completed today.<br>
+          To run again, open:<br>
+          <code>?secret={$SECRET}&reset=1</code>";
+    exit;
+}
 
 /* ================== INIT QUEUE ================== */
-// If queue does not exist or is empty → rebuild automatically
-if (!file_exists($queueFile) || trim(file_get_contents($queueFile)) === '') {
+if (!file_exists($queueFile)) {
     file_put_contents($queueFile, implode("\n", $ALL_DATABASES));
 }
 
 /* ================== READ QUEUE ================== */
 $dbs = file($queueFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-// All done
+/* ================== ALL DONE ================== */
 if (!$dbs || count($dbs) === 0) {
     @unlink($runtimeFile);
-    echo "✅ ALL DATABASES IMPORTED SUCCESSFULLY";
+    @unlink($lockFile);
+    file_put_contents($completedFile, date('Y-m-d H:i:s'));
+    echo "✅ ALL DATABASES IMPORTED SUCCESSFULLY. PROCESS STOPPED.";
     exit;
 }
 
 /* ================== NEXT DATABASE ================== */
 $db = array_shift($dbs);
-
-// Save remaining DBs back to queue
 file_put_contents($queueFile, implode("\n", $dbs));
 
 /* ================== WRITE RUNTIME ================== */
