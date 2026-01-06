@@ -66,6 +66,23 @@
 </div>
 
 <div class="card">
+    <h3>Copy Dump Files</h3>
+    <div class="desc">Copy all <code>.sql.gz</code> files from storage to BigDump directory.</div>
+    <a class="button" target="_blank"
+       href="https://casadarsh.himachalsoceity.com/copy_dumps.php">
+        Copy Dump Files
+    </a>
+</div>
+<div class="card">
+    <h3>Download Dumps</h3>
+    <div class="desc">Download all <code>.sql.gz</code> files (browser may ask to allow pop-ups).</div>
+    <a class="button" target="_blank"
+       href="https://casadarsh.himachalsoceity.com/bigdump/download_dumps.php">
+        Download Dumps
+    </a>
+</div>
+
+<div class="card">
     <h3>Import Databases (BigDump)</h3>
     <div class="desc">Reset queue and import all databases using BigDump.</div>
     <a class="button danger" target="_blank"
@@ -75,23 +92,6 @@
     </a>
 </div>
 
-<div class="card">
-    <h3>Copy Dump Files</h3>
-    <div class="desc">Copy all <code>.sql.gz</code> files from storage to BigDump directory.</div>
-    <a class="button" target="_blank"
-       href="https://casadarsh.himachalsoceity.com/copy_dumps.php">
-        Copy Dump Files
-    </a>
-</div>
-
-<div class="card">
-    <h3>Download Dumps</h3>
-    <div class="desc">Download all <code>.sql.gz</code> files (browser may ask to allow pop-ups).</div>
-    <a class="button" target="_blank"
-       href="https://casadarsh.himachalsoceity.com/bigdump/download_dumps.php">
-        Download Dumps
-    </a>
-</div>
 
 <div class="card">
     <h3>Delete Dumps (BigDump)</h3>
