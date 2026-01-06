@@ -13,11 +13,8 @@ Route::get('/clean', function () {
 });
 
 Route::get('/casdown', function () {
-    Artisan::call('down', [
-        '--render' => 'errors::503',
-    ]);
-
-    return 'Down';
+    Artisan::call('down'); // no --message needed
+    return 'OK';
 });
 
 Route::get('/casup', function () {
