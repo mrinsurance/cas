@@ -441,7 +441,7 @@ pre  { background:#111; color:#0f0; padding:15px; max-height:500px; overflow:aut
 <pre id="log">Starting export…</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsoceity.com/db-export/run?secret={$secret}";
+const RUN_URL = "https://casadarsh.himachalsociety.com/db-export/run?secret={$secret}";
 const log = document.getElementById('log');
 
 let delay = 2000; // start with 2s
@@ -523,7 +523,7 @@ pre { background: #111; color: #0f0; padding: 15px; max-height: 500px; overflow:
 <pre id="log">Starting import…</pre>
 
 <script>
-const RUN_URL = "https://casadarsh.himachalsoceity.com/db-import/run?secret={$secret}";
+const RUN_URL = "https://casadarsh.himachalsociety.com/db-import/run?secret={$secret}";
 const log = document.getElementById('log');
 
 async function runNext() {
