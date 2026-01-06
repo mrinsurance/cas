@@ -60,7 +60,7 @@
     <h3>Clean Databases</h3>
     <div class="desc">Run database cleanup process.</div>
     <a class="button" target="_blank"
-       href="https://casguriah.himachalsociety.com/db-cleaner/run">
+       href="https://casguriah.himachalsociety.com/db-cleaner/run?secret=hp20nbd">
         Run DB Cleaner
     </a>
 </div>
