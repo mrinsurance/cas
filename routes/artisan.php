@@ -14,7 +14,7 @@ Route::get('/clean', function () {
 
 Route::get('/casdown', function () {
     Artisan::call('down', [
-        '--message' => 'Upgrading Software. Will be back shortly.',
+        '--render' => 'errors::503',
     ]);
 
     return 'Down';
