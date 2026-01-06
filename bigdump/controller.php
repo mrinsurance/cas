@@ -70,8 +70,8 @@ $ALL_DATABASES = [
 
 // DB credentials
 $DB_SERVER = 'localhost';
-$DB_USER   = 'himachal';
-$DB_PASS   = '6nwf6ji1w6yn';
+$DB_USER   = 'societydata';
+$DB_PASS   = 'Good@2025tech';
 
 /* ================== SECURITY ================== */
 if (!isset($_GET['secret']) || $_GET['secret'] !== $SECRET) {

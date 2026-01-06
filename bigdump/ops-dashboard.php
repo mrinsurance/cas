@@ -51,7 +51,7 @@
     <h3>Export Databases</h3>
     <div class="desc">Generate database backup dumps.</div>
     <a class="button" target="_blank"
-       href="https://casadarsh.himachalsociety.com/db-export/runner?secret=hp20nbd">
+       href="https://casguriah.himachalsociety.com/db-export/runner?secret=hp20nbd">
         Run DB Export
     </a>
 </div>
@@ -60,7 +60,7 @@
     <h3>Clean Databases</h3>
     <div class="desc">Run database cleanup process.</div>
     <a class="button" target="_blank"
-       href="https://casadarsh.himachalsociety.com/db-cleaner/run">
+       href="https://casguriah.himachalsociety.com/db-cleaner/run">
         Run DB Cleaner
     </a>
 </div>
@@ -69,7 +69,7 @@
     <h3>Copy Dump Files</h3>
     <div class="desc">Copy all <code>.sql.gz</code> files from storage to BigDump directory.</div>
     <a class="button" target="_blank"
-       href="https://casadarsh.himachalsociety.com/copy_dumps.php">
+       href="https://casguriah.himachalsociety.com/copy_dumps.php">
         Copy Dump Files
     </a>
 </div>
@@ -77,7 +77,7 @@
     <h3>Download Dumps</h3>
     <div class="desc">Download all <code>.sql.gz</code> files (browser may ask to allow pop-ups).</div>
     <a class="button" target="_blank"
-       href="https://casadarsh.himachalsociety.com/bigdump/download_dumps.php">
+       href="https://casguriah.himachalsociety.com/bigdump/download_dumps.php">
         Download Dumps
     </a>
 </div>
@@ -87,7 +87,7 @@
     <div class="desc">Reset queue and import all databases using BigDump.</div>
     <a class="button danger" target="_blank"
        onclick="return confirm('This will RESET and re-import all databases. Continue?')"
-       href="https://casadarsh.himachalsociety.com/bigdump/controller.php?secret=hp20nbd&reset=1">
+       href="https://casguriah.himachalsociety.com/bigdump/controller.php?secret=hp20nbd&reset=1">
         Reset & Start Import
     </a>
 </div>
@@ -98,7 +98,7 @@
     <div class="desc">Delete all dump files from <code>/bigdump</code> directory.</div>
     <a class="button danger" target="_blank"
        onclick="return confirm('This will DELETE all dumps from /bigdump. Continue?')"
-       href="https://casadarsh.himachalsociety.com/delete_bigdump_dumps.php">
+       href="https://casguriah.himachalsociety.com/delete_bigdump_dumps.php">
         Delete BigDump Dumps
     </a>
 </div>
@@ -108,7 +108,7 @@
     <div class="desc">Delete all dump files from <code>storage/db-imports</code>.</div>
     <a class="button danger" target="_blank"
        onclick="return confirm('This will DELETE all dumps from storage. Continue?')"
-       href="https://casadarsh.himachalsociety.com/delete_storage_dumps.php">
+       href="https://casguriah.himachalsociety.com/delete_storage_dumps.php">
         Delete Storage Dumps
     </a>
 </div>
