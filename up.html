@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CAS Maintenance Control</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { padding: 10px 16px; font-size: 16px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background: #f5f5f5; }
+    .ok { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    .pending { color: orange; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>CAS Maintenance Dashboard</h2>
+
+<button onclick="runAll()">Execute All /casup</button>
+
+<table>
+<thead>
+<tr>
+    <th>#</th>
+    <th>URL</th>
+    <th>Status</th>
+</tr>
+</thead>
+<tbody id="result"></tbody>
+</table>
+
+<script>
+const urls = [
+"https://casadarsh.himachalsociety.com/casup",
+"https://casamb.himachalsociety.com/casup",
+"https://casamned.himachalsociety.com/casup",
+"https://casansui.himachalsociety.com/casup",
+"https://casbadhera.himachalsociety.com/casup",
+"https://casbajuri.himachalsociety.com/casup",
+"https://casbalduhak.himachalsociety.com/casup",
+"https://casbara.himachalsociety.com/casup",
+"https://casbari.himachalsociety.com/casup",
+"https://casbarin.himachalsociety.com/casup",
+"https://casbatran.himachalsociety.com/casup",
+"https://casbehrar.himachalsociety.com/casup",
+"https://casbhaleth.himachalsociety.com/casup",
+"https://casbhaloon.himachalsociety.com/casup",
+"https://casbharmoti.himachalsociety.com/casup",
+"https://casboh.himachalsociety.com/casup",
+"https://casboungta.himachalsociety.com/casup",
+"https://caschabutra.himachalsociety.com/casup",
+"https://caschamiana.himachalsociety.com/casup",
+"https://caschoru.himachalsociety.com/casup",
+"https://casdangri.himachalsociety.com/casup",
+"https://casdarini.himachalsociety.com/casup",
+"https://casdhaneta.himachalsociety.com/casup",
+"https://casdol.himachalsociety.com/casup",
+"https://casduhak.himachalsociety.com/casup",
+"https://casgahallian.himachalsociety.com/casup",
+"https://casgalore.himachalsociety.com/casup",
+"https://casguriah.himachalsociety.com/casup",
+"https://cashareta.himachalsociety.com/casup",
+"https://casharnera.himachalsociety.com/casup",
+"https://casjeehan.himachalsociety.com/casup",
+"https://casjhallan.himachalsociety.com/casup",
+"https://casjhiralri.himachalsociety.com/casup",
+"https://caskaloor.himachalsociety.com/casup",
+"https://caskamlah.himachalsociety.com/casup",
+"https://caskangoo.himachalsociety.com/casup",
+"https://caskehdru.himachalsociety.com/casup",
+"https://caskhabli.himachalsociety.com/casup",
+"https://caskhundian.himachalsociety.com/casup",
+"https://caskohala.himachalsociety.com/casup",
+"https://caskuthera.himachalsociety.com/casup",
+"https://caslambri.himachalsociety.com/casup",
+"https://casmakroti.himachalsociety.com/casup",
+"https://casmand.himachalsociety.com/casup",
+"https://casmangwal.himachalsociety.com/casup",
+"https://casmasseraru.himachalsociety.com/casup",
+"https://casmattansidh.himachalsociety.com/casup",
+"https://casphakloh.himachalsociety.com/casup",
+"https://casrail.himachalsociety.com/casup",
+"https://casrainkh.himachalsociety.com/casup",
+"https://casrangas.himachalsociety.com/casup",
+"https://cassalli.himachalsociety.com/casup",
+"https://cassehwan.himachalsociety.com/casup",
+"https://cassilh.himachalsociety.com/casup",
+"https://cassorar.himachalsociety.com/casup",
+"https://cassurani.himachalsociety.com/casup",
+"https://cassurarwan.himachalsociety.com/casup",
+"https://castatwani.himachalsociety.com/casup",
+"https://casuttap.himachalsociety.com/casup"
+];
+
+const tbody = document.getElementById('result');
+
+urls.forEach((u, i) => {
+    tbody.innerHTML += `
+        <tr id="row-${i}">
+            <td>${i + 1}</td>
+            <td>${u}</td>
+            <td class="pending" id="status-${i}">Pending</td>
+        </tr>
+    `;
+});
+
+async function runAll() {
+    for (let i = 0; i < urls.length; i++) {
+        const statusEl = document.getElementById(`status-${i}`);
+        statusEl.textContent = 'Running...';
+        statusEl.className = 'pending';
+
+        try {
+            const res = await fetch(urls[i], { method: 'GET', mode: 'no-cors' });
+            statusEl.textContent = 'Triggered';
+            statusEl.className = 'ok';
+        } catch (e) {
+            statusEl.textContent = 'Failed';
+            statusEl.className = 'fail';
+        }
+    }
+}
+</script>
+
+</body>
+</html>

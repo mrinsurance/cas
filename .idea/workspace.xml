@@ -179,7 +179,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/Audit" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -195,11 +195,11 @@
       <recent name="E:\xampp\htdocs\cas\assets\js\pages" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\xampp\htdocs\cas" />
       <recent name="C:\xampp\htdocs\himachal\resources\views\Audit" />
       <recent name="C:\xampp\htdocs\himachal\resources\views\Balance" />
       <recent name="C:\xampp\htdocs\himachal\resources\views\Ledger" />
       <recent name="C:\xampp\htdocs\himachal\resources\views\BalancePageTotal" />
-      <recent name="C:\xampp\htdocs\himachal\resources\views" />
     </key>
   </component>
   <component name="RunManager">
@@ -360,7 +360,7 @@
       <workItem from="1713336157951" duration="872000" />
       <workItem from="1767711211076" duration="2348000" />
       <workItem from="1767866747981" duration="4436000" />
-      <workItem from="1768017458680" duration="3776000" />
+      <workItem from="1768017458680" duration="5654000" />
     </task>
     <servers />
   </component>
