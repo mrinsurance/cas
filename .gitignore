@@ -30,3 +30,4 @@ Homestead.json
 auth.json
 /routes/server.php
 
+/storage
